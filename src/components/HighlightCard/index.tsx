@@ -6,21 +6,34 @@ import {
   Title,
   Icon,
   Content,
-  Ammount,
+  Amount,
   Message,
 } from './styles';
 
-export function HighlightCard() {
+interface IProps {
+  type: 'up' | 'down' | 'total';
+  title: string;
+  amount: string;
+  message: string;
+}
+
+const icon = {
+  up: 'arrow-up-circle',
+  down: 'arrow-down-circle',
+  total: 'dollar-sign',
+}
+
+export function HighlightCard({ type, title, amount, message }: IProps) {
   return (
-    <Container>
+    <Container type={type}>
       <Header>
-        <Title>Entradas</Title>
-        <Icon name="arrow-up-circle" />
+        <Title type={type}>{title}</Title>
+        <Icon name={icon[type]} type={type} />
       </Header>
 
       <Content>
-        <Ammount>R$ 17.400,00</Ammount>
-        <Message>Última entrada dia 13 de abril</Message>
+        <Amount type={type}>{amount}</Amount>
+        <Message type={type}>{message}</Message>
       </Content>
     </Container>
   );
