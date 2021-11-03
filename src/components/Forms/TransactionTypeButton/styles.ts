@@ -11,7 +11,9 @@ interface IButtonProps {
   type: 'income' | 'outcome';
 }
 
-export const Container = styled.TouchableOpacity<IButtonProps>`
+export const Container = styled.TouchableOpacity.attrs({
+  activeOpacity: 1,
+}) <IButtonProps>`
   width: 48%;
   
   flex-direction: row;
