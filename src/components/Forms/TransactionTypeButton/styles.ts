@@ -12,7 +12,7 @@ interface IButtonProps {
 }
 
 export const Container = styled.TouchableOpacity.attrs({
-  activeOpacity: 1,
+  activeOpacity: 0.7,
 }) <IButtonProps>`
   width: 48%;
   
