@@ -1,5 +1,6 @@
 import React from 'react';
 import { TouchableOpacityProps } from 'react-native';
+import { RectButtonProps } from 'react-native-gesture-handler';
 
 import {
   Container,
@@ -12,7 +13,7 @@ const icons = {
   outcome: 'arrow-down-circle',
 };
 
-interface IProps extends TouchableOpacityProps {
+interface IProps extends RectButtonProps {
   type: 'income' | 'outcome';
   text: string;
   isSelected: boolean;

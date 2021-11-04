@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components/native";
 import { Feather } from '@expo/vector-icons';
 import { RFValue } from "react-native-responsive-fontsize";
+import { RectButton } from "react-native-gesture-handler";
 
 interface ITypeProps {
   type: 'income' | 'outcome';
@@ -11,9 +12,7 @@ interface IButtonProps {
   type: 'income' | 'outcome';
 }
 
-export const Container = styled.TouchableOpacity.attrs({
-  activeOpacity: 0.7,
-}) <IButtonProps>`
+export const Container = styled(RectButton) <IButtonProps>`
   width: 48%;
   
   flex-direction: row;
