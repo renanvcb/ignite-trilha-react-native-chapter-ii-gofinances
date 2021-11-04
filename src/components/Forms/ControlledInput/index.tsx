@@ -4,14 +4,15 @@ import { TextInputProps } from 'react-native';
 
 import { Input } from '../Input';
 
-import { Container } from './styles';
+import { Container, ErorrMessage } from './styles';
 
 interface IProps extends TextInputProps {
   control: Control;
   name: string;
+  error: string;
 }
 
-export function ControlledInput({ control, name, ...rest }: IProps) {
+export function ControlledInput({ control, name, error, ...rest }: IProps) {
   return (
     <Container>
       <Controller
@@ -25,6 +26,7 @@ export function ControlledInput({ control, name, ...rest }: IProps) {
         )}
         name={name}
       />
+      {error && <ErorrMessage>{error}</ErorrMessage>}
     </Container>
   );
 }
