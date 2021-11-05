@@ -29,7 +29,9 @@ export const Title = styled.Text`
   color: ${({ theme }) => theme.colors.shape};
 `;
 
-export const Category = styled.TouchableOpacity<ICategoryProps>`
+export const Category = styled.TouchableOpacity.attrs({
+  activeOpacity: 0.7,
+}) <ICategoryProps>`
   width: 100%;
   padding: ${RFValue(15)}px;
 
