@@ -1,9 +1,9 @@
 import React from 'react';
-import { TouchableOpacityProps } from 'react-native';
 import { RectButtonProps } from 'react-native-gesture-handler';
 
 import {
   Container,
+  Button,
   Icon,
   ButtonText,
 } from './styles';
@@ -29,15 +29,18 @@ export function TransactionTypeButton({
     <Container
       isSelected={isSelected}
       type={type}
-      {...rest}
     >
-      <Icon
-        name={icons[type]}
-        type={type}
-      />
-      <ButtonText>
-        {text}
-      </ButtonText>
+      <Button
+        {...rest}
+      >
+        <Icon
+          name={icons[type]}
+          type={type}
+        />
+        <ButtonText>
+          {text}
+        </ButtonText>
+      </Button>
     </Container>
   );
 }

@@ -12,19 +12,13 @@ interface IButtonProps {
   type: 'income' | 'outcome';
 }
 
-export const Container = styled(RectButton) <IButtonProps>`
+export const Container = styled.View<IButtonProps>`
   width: 48%;
-  
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
 
   border-width: ${({ isSelected }) => isSelected ? 0 : 1.5}px;
   border-style: solid;
   border-color: ${({ theme }) => theme.colors.text};
   border-radius: 5px;
-
-  padding: 16px;
 
   ${({ isSelected, type }) => isSelected && type === 'income' && css`
       background-color: ${({ theme }) => theme.colors.success_light};
@@ -33,6 +27,14 @@ export const Container = styled(RectButton) <IButtonProps>`
   ${({ isSelected, type }) => isSelected && type === 'outcome' && css`
       background-color: ${({ theme }) => theme.colors.attention_light};
   `};
+`;
+
+export const Button = styled(RectButton)`
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  padding: 16px;
 `;
 
 export const Icon = styled(Feather) <ITypeProps>`
