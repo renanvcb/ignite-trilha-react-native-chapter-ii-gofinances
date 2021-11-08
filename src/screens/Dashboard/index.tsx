@@ -28,7 +28,7 @@ export function Dashboard() {
   const data: IDataListProps[] = [
     {
       id: '1',
-      type: 'credit',
+      type: 'income',
       description: 'Desenvolvimento de site',
       amount: 'R$ 12.000,00',
       category: {
@@ -39,7 +39,7 @@ export function Dashboard() {
     },
     {
       id: '2',
-      type: 'debit',
+      type: 'outcome',
       description: 'Hamburgueria Pizzy',
       amount: 'R$ 59,00',
       category: {
@@ -50,7 +50,7 @@ export function Dashboard() {
     },
     {
       id: '3',
-      type: 'debit',
+      type: 'outcome',
       description: 'Aluguel do apartamento',
       amount: 'R$ 900.00',
       category: {

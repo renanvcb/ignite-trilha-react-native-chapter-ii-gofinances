@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Keyboard, TouchableWithoutFeedback, Alert } from 'react-native';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import uuid from 'react-native-uuid';
+import { useNavigation } from '@react-navigation/native';
 
 import { ControlledInput } from '../../components/Forms/ControlledInput';
 import { Button } from '../../components/Forms/Button';
@@ -20,12 +23,12 @@ import {
 } from './styles';
 
 interface IFormData {
-  name: string;
+  description: string;
   amount: string;
 }
 
 const schema = yup.object().shape({
-  name: yup.string().required('Uma descrição é obrigatória'),
+  description: yup.string().required('Uma descrição é obrigatória'),
   amount: yup.number()
     .required('O valor é obrigatório')
     .typeError('Somente valores numéricos')
@@ -43,10 +46,15 @@ export function Register() {
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
   });
+
+  const dataKey = '@gofinances:transactions';
+
+  const navigation = useNavigation();
 
   function handleTransactionTypeSelect(type: 'income' | 'outcome') {
     setTransactionType(type);
@@ -61,7 +69,7 @@ export function Register() {
     setCategoryModalOpen(false);
   }
 
-  function handleRegisterTransaction(form: IFormData) {
+  async function handleRegisterTransaction(form: IFormData) {
     if (!transactionType) {
       return Alert.alert('Selecione um tipo de transação!');
     }
@@ -70,16 +78,59 @@ export function Register() {
       return Alert.alert('Selecione uma categoria!');
     }
 
-    const data = {
-      name: form.name,
+    const newTransaction = {
+      id: String(uuid.v4()),
+      description: form.description,
       amount: form.amount,
-      transactionType,
+      type: transactionType,
       category: category.key,
+      date: new Date(),
     }
 
-    console.log(data);
+    try {
+      const asyncStorageData = await AsyncStorage.getItem(dataKey);
+      const currentData = asyncStorageData ? JSON.parse(asyncStorageData) : [];
+
+      const formattedData = [
+        ...currentData,
+        newTransaction,
+      ];
+
+      await AsyncStorage.setItem(dataKey, JSON.stringify(formattedData));
+
+      // Reset form fields
+      reset();
+      setTransactionType('');
+      setCategory({
+        key: 'category',
+        name: 'Categoria',
+      });
+
+      navigation.navigate('Listagem');
+
+    } catch (error) {
+      console.log(error);
+      Alert.alert('Não foi possível registrar a transação');
+    }
+
     Keyboard.dismiss();
+    console.log(newTransaction);
   }
+
+  // useEffect(() => {
+  //   async function loadAsyncStorageData() {
+  //     const data = await AsyncStorage.getItem(dataKey);
+  //     console.log(JSON.parse(data!));
+  //   }
+
+  //   loadAsyncStorageData();
+
+  //   // async function clearAsyncStorageData() {
+  //   //   await AsyncStorage.removeItem(dataKey);
+  //   // }
+
+  //   // clearAsyncStorageData();
+  // }, []);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -91,7 +142,7 @@ export function Register() {
         <Form>
           <Fields>
             <ControlledInput
-              name="name"
+              name="description"
               control={control}
               placeholder="Descrição"
               autoCapitalize="sentences"

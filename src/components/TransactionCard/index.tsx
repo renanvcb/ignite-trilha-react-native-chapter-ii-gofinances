@@ -17,7 +17,7 @@ interface ICategoryProps {
 }
 
 export interface ITransactionCardProps {
-  type: 'credit' | 'debit';
+  type: 'income' | 'outcome';
   description: string;
   amount: string;
   category: ICategoryProps;
@@ -33,7 +33,7 @@ export function TransactionCard({ data }: ITypeProps) {
     <Container>
       <Title>{data.description}</Title>
       <Amount type={data.type}>
-        {data.type === 'debit' && '- '}
+        {data.type === 'outcome' && '- '}
         {data.amount}
       </Amount>
       <Footer>
