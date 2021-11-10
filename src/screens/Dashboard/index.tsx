@@ -1,4 +1,5 @@
-import React from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useEffect, useState } from 'react';
 
 import { HighlightCard } from '../../components/HighlightCard';
 import { TransactionCard, ITransactionCardProps } from '../../components/TransactionCard';
@@ -25,41 +26,58 @@ export interface IDataListProps extends ITransactionCardProps {
 }
 
 export function Dashboard() {
-  const data: IDataListProps[] = [
-    {
-      id: '1',
-      type: 'income',
-      description: 'Desenvolvimento de site',
-      amount: 'R$ 12.000,00',
-      category: {
-        name: 'Vendas',
-        icon: 'dollar-sign',
-      },
-      date: '13/04/2020'
-    },
-    {
-      id: '2',
-      type: 'outcome',
-      description: 'Hamburgueria Pizzy',
-      amount: 'R$ 59,00',
-      category: {
-        name: 'Alimentação',
-        icon: 'coffee',
-      },
-      date: '10/04/2020'
-    },
-    {
-      id: '3',
-      type: 'outcome',
-      description: 'Aluguel do apartamento',
-      amount: 'R$ 900.00',
-      category: {
-        name: 'Moradia',
-        icon: 'home',
-      },
-      date: '13/04/2020'
-    },
-  ];
+  const [data, setData] = useState<IDataListProps[]>([]);
+
+  async function loadTransactions() {
+    const dataKey = '@gofinances:transactions';
+
+    const response = await AsyncStorage.getItem(dataKey);
+
+    const transactions = response ? JSON.parse(response) : [];
+
+    const formattedTransactions: IDataListProps[] = transactions
+      .map((item: IDataListProps) => {
+        const amount = Number(item.amount).toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL'
+        });
+
+        const date = Intl.DateTimeFormat('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: '2-digit',
+        }).format(new Date(item.date));
+
+        return {
+          id: item.id,
+          description: item.description,
+          amount,
+          type: item.type,
+          category: item.category,
+          date,
+        }
+      });
+
+    setData(formattedTransactions);
+  }
+
+  useEffect(() => {
+    loadTransactions();
+  }, []);
+
+  // const data: IDataListProps[] = [
+  //   {
+  //     id: '1',
+  //     type: 'income',
+  //     description: 'Desenvolvimento de site',
+  //     amount: 'R$ 12.000,00',
+  //     category: {
+  //       name: 'Vendas',
+  //       icon: 'dollar-sign',
+  //     },
+  //     date: '13/04/2020'
+  //   },
+  // ];
 
   return (
     <Container>

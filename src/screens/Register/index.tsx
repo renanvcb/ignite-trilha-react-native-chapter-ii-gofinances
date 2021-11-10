@@ -27,6 +27,10 @@ interface IFormData {
   amount: string;
 }
 
+interface NavigationProps {
+  navigate: (screen: string) => void;
+}
+
 const schema = yup.object().shape({
   description: yup.string().required('Uma descrição é obrigatória'),
   amount: yup.number()
@@ -52,9 +56,7 @@ export function Register() {
     resolver: yupResolver(schema),
   });
 
-  const dataKey = '@gofinances:transactions';
-
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProps>();
 
   function handleTransactionTypeSelect(type: 'income' | 'outcome') {
     setTransactionType(type);
@@ -88,6 +90,8 @@ export function Register() {
     }
 
     try {
+      const dataKey = '@gofinances:transactions';
+
       const asyncStorageData = await AsyncStorage.getItem(dataKey);
       const currentData = asyncStorageData ? JSON.parse(asyncStorageData) : [];
 
