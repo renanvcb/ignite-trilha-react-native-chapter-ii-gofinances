@@ -1,5 +1,6 @@
+import React, { useCallback, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useEffect, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { HighlightCard } from '../../components/HighlightCard';
 import { TransactionCard, ITransactionCardProps } from '../../components/TransactionCard';
@@ -65,19 +66,9 @@ export function Dashboard() {
     loadTransactions();
   }, []);
 
-  // const data: IDataListProps[] = [
-  //   {
-  //     id: '1',
-  //     type: 'income',
-  //     description: 'Desenvolvimento de site',
-  //     amount: 'R$ 12.000,00',
-  //     category: {
-  //       name: 'Vendas',
-  //       icon: 'dollar-sign',
-  //     },
-  //     date: '13/04/2020'
-  //   },
-  // ];
+  useFocusEffect(useCallback(() => {
+    loadTransactions();
+  }, []));
 
   return (
     <Container>
