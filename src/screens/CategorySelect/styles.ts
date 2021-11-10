@@ -1,12 +1,13 @@
 import { RFValue } from "react-native-responsive-fontsize";
 import styled from "styled-components/native";
 import { Feather } from '@expo/vector-icons';
+import { GestureHandlerRootView, RectButton } from "react-native-gesture-handler";
 
 interface ICategoryProps {
   isActive: boolean;
 }
 
-export const Container = styled.View`
+export const Container = styled(GestureHandlerRootView)`
   flex: 1;
   background-color: ${({ theme }) => theme.colors.background};
 `;
@@ -29,9 +30,7 @@ export const Title = styled.Text`
   color: ${({ theme }) => theme.colors.shape};
 `;
 
-export const Category = styled.TouchableOpacity.attrs({
-  activeOpacity: 0.7,
-}) <ICategoryProps>`
+export const Category = styled(RectButton) <ICategoryProps>`
   width: 100%;
   padding: ${RFValue(15)}px;
 

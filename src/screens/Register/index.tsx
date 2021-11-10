@@ -118,7 +118,6 @@ export function Register() {
     }
 
     Keyboard.dismiss();
-    console.log(newTransaction);
   }
 
   // useEffect(() => {
