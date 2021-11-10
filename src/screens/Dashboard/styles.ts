@@ -108,6 +108,12 @@ export const TransactionsList = styled(
   contentContainerStyle: {
     paddingBottom: getBottomSpace()
   }
-})`
+})``;
 
+export const LoadingContainer = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+
+  background-color: ${({ theme }) => theme.colors.background};
 `;
