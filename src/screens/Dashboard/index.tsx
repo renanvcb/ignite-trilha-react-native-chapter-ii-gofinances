@@ -32,6 +32,7 @@ export interface IDataListProps extends ITransactionCardProps {
 
 interface IHighlightProps {
   amount: string;
+  lastTransactionDate: string;
 }
 
 interface IHighlightData {
@@ -46,6 +47,23 @@ export function Dashboard() {
   const [highlightData, setHighlightData] = useState<IHighlightData>({} as IHighlightData);
 
   const theme = useTheme();
+
+  function getLastTransactionDate(
+    collection: IDataListProps[],
+    type: 'income' | 'outcome'
+  ) {
+    // Finding the last of each transaction type
+    const lastTransaction = new Date(
+      Math.max.apply(Math, collection
+        // this will list only incomes
+        .filter(transaction => transaction.type === type)
+        // this will transform all dates into timestamps so Math can get the "higher date"
+        .map(transaction => new Date(transaction.date).getTime())));
+
+    return `${lastTransaction.
+      getDate()} de ${lastTransaction
+        .toLocaleString('pt-BR', { month: 'long' })}`;
+  }
 
   async function loadTransactions() {
     const dataKey = '@gofinances:transactions';
@@ -87,6 +105,12 @@ export function Dashboard() {
 
     setData(formattedTransactions);
 
+    const lastIncomeDate = getLastTransactionDate(transactions, 'income');
+    const lastOutcomeDate = getLastTransactionDate(transactions, 'outcome');
+    const balanceInterval = `01 à ${new Date().
+      getDate()} de ${new Date().toLocaleString('pt-BR', { month: 'long' })}`;
+
+    // Calculating account balance
     const balanceCalc = incomesTotal - outcomesTotal;
 
     setHighlightData({
@@ -95,18 +119,21 @@ export function Dashboard() {
           style: 'currency',
           currency: 'BRL'
         }),
+        lastTransactionDate: `Última entrada dia ${lastIncomeDate}`,
       },
       outcomes: {
         amount: outcomesTotal.toLocaleString('pt-BR', {
           style: 'currency',
           currency: 'BRL'
         }),
+        lastTransactionDate: `Última saída dia ${lastOutcomeDate}`,
       },
       balance: {
         amount: balanceCalc.toLocaleString('pt-BR', {
           style: 'currency',
           currency: 'BRL'
         }),
+        lastTransactionDate: balanceInterval,
       }
     });
 
@@ -153,19 +180,19 @@ export function Dashboard() {
                 type="up"
                 title="Entradas"
                 amount={highlightData.incomes.amount}
-                message="Última entrada dia 13 de abril"
+                message={highlightData.incomes.lastTransactionDate}
               />
               <HighlightCard
                 type="down"
                 title="Saídas"
                 amount={highlightData.outcomes.amount}
-                message="Última saída dia 03 de abril"
+                message={highlightData.outcomes.lastTransactionDate}
               />
               <HighlightCard
                 type="total"
                 title="Total"
                 amount={highlightData.balance.amount}
-                message="01 à 16 de abril"
+                message={highlightData.balance.lastTransactionDate}
               />
             </HighlightCards>
 
