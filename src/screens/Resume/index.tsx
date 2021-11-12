@@ -102,7 +102,7 @@ export function Resume() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           paddingHorizontal: 24,
-          paddingBottom: useBottomTabBarHeight(),
+          paddingBottom: useBottomTabBarHeight() - 60,
         }}
       >
 
