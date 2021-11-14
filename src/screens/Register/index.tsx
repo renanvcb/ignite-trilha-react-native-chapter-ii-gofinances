@@ -36,7 +36,7 @@ const schema = yup.object().shape({
   amount: yup.number()
     .required('O valor é obrigatório')
     .typeError('Somente valores numéricos')
-    .positive('Somente valores maiores que zero')
+    .positive('Somente valores maiores que zero'),
 });
 
 export function Register() {
@@ -149,7 +149,7 @@ export function Register() {
               placeholder="Descrição"
               autoCapitalize="sentences"
               autoCorrect={false}
-              error={errors.name && '* ' + errors.name.message}
+              error={errors.description && '* ' + errors.description.message}
             />
             <ControlledInput
               name="amount"
