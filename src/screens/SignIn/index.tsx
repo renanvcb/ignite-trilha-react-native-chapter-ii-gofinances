@@ -1,11 +1,12 @@
-import React, { useContext } from 'react';
-import { Alert } from 'react-native';
+import React, { useState } from 'react';
+import { Alert, Platform } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 import AppleSVG from '../../assets/apple.svg';
 import GoogleSVG from '../../assets/google.svg';
 import LogoSVG from '../../assets/logo.svg';
 
+import { useTheme } from 'styled-components/native';
 import { useAuth } from '../../hooks/auth';
 
 import { SignInSocialButton } from '../../components/SignInSocialButton';
@@ -17,18 +18,35 @@ import {
   Title,
   SignInText,
   Footer,
+  Load,
   ButtonWrapper,
 } from './styles';
 
 export function SignIn() {
-  const { signInWithGoogle } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const { signInWithGoogle, signInWithApple } = useAuth();
+
+  const theme = useTheme();
 
   async function handleSignInWithGoogle() {
     try {
-      await signInWithGoogle();
+      setIsLoading(true);
+      return await signInWithGoogle();
     } catch (error) {
       console.log(error);
       Alert.alert('Não foi possível conectar à conta Google!');
+      setIsLoading(false);
+    }
+  }
+
+  async function handleSignInWithApple() {
+    try {
+      setIsLoading(true);
+      return await signInWithApple();
+    } catch (error) {
+      console.log(error);
+      Alert.alert('Não foi possível conectar à conta Apple!');
+      setIsLoading(false);
     }
   }
 
@@ -61,11 +79,24 @@ export function SignIn() {
             svg={GoogleSVG}
             onPress={handleSignInWithGoogle}
           />
-          <SignInSocialButton
-            text="Entrar com Apple"
-            svg={AppleSVG}
-          />
+          {
+            Platform.OS === 'ios' &&
+            <SignInSocialButton
+              text="Entrar com Apple"
+              svg={AppleSVG}
+              onPress={handleSignInWithApple}
+            />
+          }
         </ButtonWrapper>
+
+        {isLoading &&
+          <Load
+            color={theme.colors.shape}
+            style={{
+              marginTop: 18,
+            }}
+          />
+        }
       </Footer>
     </Container>
   );

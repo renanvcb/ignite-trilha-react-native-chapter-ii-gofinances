@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import 'intl';
 import 'intl/locale-data/jsonp/pt-BR';
 import React from 'react';
@@ -10,13 +11,11 @@ import {
   Poppins_500Medium,
   Poppins_700Bold
 } from '@expo-google-fonts/poppins';
-import { NavigationContainer } from '@react-navigation/native';
 
 import theme from './src/global/styles/theme';
 
-import { AppRoutes } from './src/routes/app.routes';
-import { SignIn } from './src/screens/SignIn';
-import { AuthProvider } from './src/hooks/auth';
+import { Routes } from './src/routes';
+import { AuthProvider, useAuth } from './src/hooks/auth';
 
 export default function App() {
   const [fontsloaded] = useFonts({
@@ -25,19 +24,18 @@ export default function App() {
     Poppins_700Bold
   });
 
-  if (!fontsloaded) {
+  const { userStorageLoading } = useAuth();
+
+  if (!fontsloaded || userStorageLoading) {
     return <AppLoading autoHideSplash />
   } else {
     return (
       <ThemeProvider theme={theme}>
-        <NavigationContainer>
-          <StatusBar barStyle="light-content" backgroundColor={theme.colors.primary} />
+        <StatusBar barStyle="light-content" backgroundColor={theme.colors.primary} />
 
-          <AuthProvider>
-            <SignIn />
-          </AuthProvider>
-
-        </NavigationContainer>
+        <AuthProvider>
+          <Routes />
+        </AuthProvider>
       </ThemeProvider>
     );
   }

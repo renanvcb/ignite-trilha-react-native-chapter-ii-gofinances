@@ -1,5 +1,6 @@
 import styled from 'styled-components/native';
 import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
+import { ActivityIndicator } from 'react-native';
 
 export const Container = styled.View`
  flex: 1;
@@ -46,6 +47,8 @@ export const Footer = styled.View`
 
   background-color: ${({ theme }) => theme.colors.secondary};
 `;
+
+export const Load = styled(ActivityIndicator)``;
 
 export const ButtonWrapper = styled.View`
   margin-top: ${RFPercentage(-4)}px;
