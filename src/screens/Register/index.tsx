@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Keyboard, TouchableWithoutFeedback, Alert } from 'react-native';
-import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'react-native-uuid';
-import { useNavigation } from '@react-navigation/native';
 
 import { ControlledInput } from '../../components/Forms/ControlledInput';
 import { Button } from '../../components/Forms/Button';
 import { TransactionTypeButton } from '../../components/Forms/TransactionTypeButton';
 import { CategorySelectButton } from '../../components/Forms/CategorySelectButton';
 import { CategorySelect } from '../CategorySelect';
+
+import { useForm } from 'react-hook-form';
+import { useNavigation } from '@react-navigation/native';
+import { useAuth } from '../../hooks/auth';
 
 import {
   Container,
@@ -46,6 +48,8 @@ export function Register() {
     key: 'category',
     name: 'Categoria',
   });
+
+  const { user } = useAuth();
 
   const {
     control,
@@ -90,7 +94,7 @@ export function Register() {
     }
 
     try {
-      const dataKey = '@gofinances:transactions';
+      const dataKey = `@gofinances:transactions_user:${user.id}`;
       const asyncStorageData = await AsyncStorage.getItem(dataKey);
       const currentData = asyncStorageData ? JSON.parse(asyncStorageData) : [];
 
@@ -120,15 +124,15 @@ export function Register() {
   }
 
   // useEffect(() => {
-  //   async function loadAsyncStorageData() {
-  //     const data = await AsyncStorage.getItem(dataKey);
-  //     console.log(JSON.parse(data!));
-  //   }
+  //   // async function loadAsyncStorageData() {
+  //   //   const data = await AsyncStorage.getItem(dataKey);
+  //   //   console.log(JSON.parse(data!));
+  //   // }
 
-  //   loadAsyncStorageData();
+  //   // loadAsyncStorageData();
 
   //   // async function clearAsyncStorageData() {
-  //   //   await AsyncStorage.removeItem(dataKey);
+  //   //   await AsyncStorage.removeItem(`@gofinances:transactions_user:${user.id}`);
   //   // }
 
   //   // clearAsyncStorageData();

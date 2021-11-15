@@ -54,13 +54,15 @@ export function Dashboard() {
     collection: IDataListProps[],
     type: 'income' | 'outcome'
   ) {
-    // Finding the last of each transaction type
-    const lastTransaction = new Date(
-      Math.max.apply(Math, collection
-        // this will list only incomes
-        .filter(transaction => transaction.type === type)
-        // this will transform all dates into timestamps so Math can get the "higher date"
-        .map(transaction => new Date(transaction.date).getTime())));
+    const collectionFiltered = collection
+      .filter(transaction => transaction.type === type);
+
+    if (collectionFiltered.length === 0) {
+      return 0;
+    }
+
+    const lastTransaction = new Date(Math.max.apply(Math, collectionFiltered
+      .map(transaction => new Date(transaction.date).getTime())));
 
     return `${lastTransaction.
       getDate()} de ${lastTransaction
@@ -68,7 +70,7 @@ export function Dashboard() {
   }
 
   async function loadTransactions() {
-    const dataKey = '@gofinances:transactions';
+    const dataKey = `@gofinances:transactions_user:${user.id}`;
     const response = await AsyncStorage.getItem(dataKey);
     const transactions = response ? JSON.parse(response) : [];
 
@@ -109,8 +111,11 @@ export function Dashboard() {
 
     const lastIncomeDate = getLastTransactionDate(transactions, 'income');
     const lastOutcomeDate = getLastTransactionDate(transactions, 'outcome');
-    const balanceInterval = `01 à ${new Date().
-      getDate()} de ${new Date().toLocaleString('pt-BR', { month: 'long' })}`;
+    const balanceInterval = (lastIncomeDate === 0 && lastOutcomeDate === 0) ?
+      'Não há transações.' :
+      `01 à ${new Date().
+        getDate()} de ${new Date().
+          toLocaleString('pt-BR', { month: 'long' })}`;
 
     // Calculating account balance
     const balanceCalc = incomesTotal - outcomesTotal;
@@ -121,14 +126,18 @@ export function Dashboard() {
           style: 'currency',
           currency: 'BRL'
         }),
-        lastTransactionDate: `Última entrada dia ${lastIncomeDate}`,
+        lastTransactionDate: lastIncomeDate === 0 ?
+          'Não há nenhuma transação de entrada.' :
+          `Última entrada dia ${lastIncomeDate}`,
       },
       outcomes: {
         amount: outcomesTotal.toLocaleString('pt-BR', {
           style: 'currency',
           currency: 'BRL'
         }),
-        lastTransactionDate: `Última saída dia ${lastOutcomeDate}`,
+        lastTransactionDate: lastOutcomeDate === 0 ?
+          'Não há nenhuma transação de saída.' :
+          `Última entrada dia ${lastOutcomeDate}`,
       },
       balance: {
         amount: balanceCalc.toLocaleString('pt-BR', {
